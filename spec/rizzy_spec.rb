@@ -5,6 +5,13 @@ RSpec.describe Rizzy do
     expect(Rizzy::VERSION).not_to be nil
   end
 
-  it "returns a greeting when a name is given" do
-    result = Rizzy.
+  describe ".parse" do
+    it "loads a file" do
+      fixture_path = File.join(__dir__, "fixtures", "ris.ris")
+      content = File.read(fixture_path)
+      ret = Rizzy.parse(content)
+      puts ret
+      expect(ret).to be_a(String)
+    end
+  end
 end
