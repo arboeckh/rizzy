@@ -18,3 +18,5 @@ reference = Rizzy::Reference.new(type: "JOUR", database: "PubMed")  # add any fi
 file_content = Rizzy.write(reference)  #accepts single reference or array of references
 # write to file as needed
 ```
+## TODO
+- [ ] Implement non-common .ris tag types
