@@ -1,3 +1,3 @@
 module Rizzy
-  Reference = Struct.new(:title, :year, keyword_init: true)
+  Reference = Struct.new(:type, :database, :authors)
 end
