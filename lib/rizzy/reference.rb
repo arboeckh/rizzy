@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Rizzy
   Reference = Struct.new(
     :type,                    # TY
