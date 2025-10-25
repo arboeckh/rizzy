@@ -30,7 +30,7 @@ module Rizzy
 
       tag = elements[0]
       value = elements[1].strip
-      add_entry(tag, value, data)
+      add_entry(tag, value, data) unless tag.nil? || value.nil?
     end
     Reference.new(**data)
   end
@@ -41,8 +41,56 @@ module Rizzy
       data[:type] = entry
     when "DB"
       data[:database] = entry
-    when "A1"
+    when "ID"
+      data[:id] = entry
+    when "DO"
+      data[:doi] = entry
+    when "T1", "TI"
+      data[:title] = entry
+    when "Y1", "PY"
+      data[:year] = entry
+    when "N2", "AB"
+      data[:abstract] = entry
+    when "M3"
+      data[:type_of_work] = entry
+    when "JF"
+      data[:journal_full] = entry
+    when "VL"
+      data[:volume] = entry
+    when "IS"
+      data[:issue] = entry
+    when "SP"
+      data[:start_page] = entry
+    when "EP"
+      data[:end_page] = entry
+    when "CY"
+      data[:country] = entry
+    when "SN"
+      data[:isbn] = entry
+    when "NL"
+      data[:alternate_journal] = entry
+    when "LA"
+      data[:language] = entry
+    when "PT"
+      data[:publication_type] = entry
+    when "A1", "AU"
       data[:authors] << entry
+    when "AI"
+      data[:author_identifiers] << entry
+    when "A2"
+      data[:secondary_authors] << entry
+    when "KW"
+      data[:keywords] << entry
+    when "PB"
+      data[:publishers] << entry
+    when "AD"
+      data[:addresses] << entry
+    when "M1"
+      data[:miscellaneous_ones] << entry
+    when "M2"
+      data[:miscellaneous_twos] << entry
+    when "L2", "UR"
+      data[:urls] << entry
     end
   end
 
