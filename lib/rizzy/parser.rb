@@ -4,12 +4,48 @@ require_relative "reference"
 
 # Rizzy parsing logic
 module Rizzy
+  TAG_TO_FIELD = {
+    "TY" => { attr: :type, multiple: false },
+    "DB" => { attr: :database, multiple: false },
+    "ID" => { attr: :id, multiple: false },
+    "DO" => { attr: :doi, multiple: false },
+    "T1" => { attr: :title, multiple: false },
+    "TI" => { attr: :title, multiple: false },
+    "Y1" => { attr: :year, multiple: false },
+    "PY" => { attr: :year, multiple: false },
+    "N2" => { attr: :abstract, multiple: false },
+    "AB" => { attr: :abstract, multiple: false },
+    "M3" => { attr: :type_of_work, multiple: false },
+    "JF" => { attr: :journal_full, multiple: false },
+    "VL" => { attr: :volume, multiple: false },
+    "IS" => { attr: :issue, multiple: false },
+    "SP" => { attr: :start_page, multiple: false },
+    "EP" => { attr: :end_page, multiple: false },
+    "CY" => { attr: :country, multiple: false },
+    "SN" => { attr: :isbn, multiple: false },
+    "NL" => { attr: :alternate_journal, multiple: false },
+    "LA" => { attr: :language, multiple: false },
+    "PT" => { attr: :publication_type, multiple: false },
+    "A1" => { attr: :authors, multiple: true },
+    "AU" => { attr: :authors, multiple: true },
+    "AI" => { attr: :author_identifiers, multiple: true },
+    "A2" => { attr: :secondary_authors, multiple: true },
+    "KW" => { attr: :keywords, multiple: true },
+    "PB" => { attr: :publishers, multiple: true },
+    "AD" => { attr: :addresses, multiple: true },
+    "M1" => { attr: :miscellaneous_ones, multiple: true },
+    "M2" => { attr: :miscellaneous_twos, multiple: true },
+    "L2" => { attr: :urls, multiple: true },
+    "UR" => { attr: :urls, multiple: true }
+  }.freeze
+
   def self.parse(content)
     str = normalize_encoding(content)
     entries = str.split("ER  -")
     references = []
     entries.each do |entry|
-      references << process_entry(entry)
+      reference = process_entry(entry)
+      references << process_entry(entry) unless reference[:type].nil?
     end
     references
   end
@@ -28,69 +64,20 @@ module Rizzy
       elements = line.split("  - ")
       next if elements.length != 2
 
-      tag = elements[0]
-      value = elements[1].strip
-      add_entry(tag, value, data) unless tag.nil? || value.nil?
+      add_entry(elements[0], elements[1].strip, data)
     end
     Reference.new(**data)
   end
 
   def self.add_entry(tag, entry, data)
-    case tag
-    when "TY"
-      data[:type] = entry
-    when "DB"
-      data[:database] = entry
-    when "ID"
-      data[:id] = entry
-    when "DO"
-      data[:doi] = entry
-    when "T1", "TI"
-      data[:title] = entry
-    when "Y1", "PY"
-      data[:year] = entry
-    when "N2", "AB"
-      data[:abstract] = entry
-    when "M3"
-      data[:type_of_work] = entry
-    when "JF"
-      data[:journal_full] = entry
-    when "VL"
-      data[:volume] = entry
-    when "IS"
-      data[:issue] = entry
-    when "SP"
-      data[:start_page] = entry
-    when "EP"
-      data[:end_page] = entry
-    when "CY"
-      data[:country] = entry
-    when "SN"
-      data[:isbn] = entry
-    when "NL"
-      data[:alternate_journal] = entry
-    when "LA"
-      data[:language] = entry
-    when "PT"
-      data[:publication_type] = entry
-    when "A1", "AU"
-      data[:authors] << entry
-    when "AI"
-      data[:author_identifiers] << entry
-    when "A2"
-      data[:secondary_authors] << entry
-    when "KW"
-      data[:keywords] << entry
-    when "PB"
-      data[:publishers] << entry
-    when "AD"
-      data[:addresses] << entry
-    when "M1"
-      data[:miscellaneous_ones] << entry
-    when "M2"
-      data[:miscellaneous_twos] << entry
-    when "L2", "UR"
-      data[:urls] << entry
+    mapping = TAG_TO_FIELD[tag]
+    return if mapping.nil?
+
+    attr = mapping[:attr]
+    if mapping[:multiple]
+      data[attr] << entry
+    else
+      data[attr] = entry
     end
   end
 

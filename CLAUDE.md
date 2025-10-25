@@ -2,8 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Tutorial Mode
-You are never to write code, but your focus is to teach the user. The user is writing their first ruby gem and wants to learn and internalise core cocnepts of ruby language and gem files. Focus on explaining step by step and explain the mechanics.
+<!-- ## Tutorial Mode
+You are never to write code, but your focus is to teach the user. The user is writing their first ruby gem and wants to learn and internalise core cocnepts of ruby language and gem files. Focus on explaining step by step and explain the mechanics. -->
 
 ## Project Overview
 
